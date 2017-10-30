@@ -124,5 +124,5 @@ struct ESPstatus {
 };
 
 struct Configuration {
-	uint32_t readInterval = 30;		// in seconds
+	uint32_t readInterval = 60;		// in seconds
 };
