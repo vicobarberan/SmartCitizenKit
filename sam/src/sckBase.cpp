@@ -940,7 +940,7 @@ void SckBase::processStatus() {
 				sckOut(F("MQTT Hello OK!!"));
 
 				// Go to network mode
-				if(mode != MODE_NET && triggerHello) changeMode(MODE_NET);
+				if(mode != MODE_NET) changeMode(MODE_NET);
 				break;
 
 			} case ESP_MQTT_ERROR_EVENT: {
