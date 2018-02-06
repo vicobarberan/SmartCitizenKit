@@ -444,7 +444,7 @@ void SckBase::changeMode(SCKmodes newMode) {
 			// timerSet(ACTION_PUBLISH, 3000);
 
 			// Set timer for periodically publishing
-			// timerSet(ACTION_PUBLISH, configuration.readInterval*1000, true);
+			timerSet(ACTION_PUBLISH, configuration.readInterval*1000, true);
 
 			sckOut(String F("Publishing every ") + String(configuration.readInterval) + F(" seconds"));
 			break;
