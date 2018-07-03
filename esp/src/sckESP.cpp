@@ -1106,7 +1106,7 @@ bool SckESP::mqttStart() {
 	
 	debugOUT(F("Connecting to MQTT server..."));
 
-	MQTTclient.setServer(MQTT_SERVER_NAME, 1883);
+	MQTTclient.setServer(MQTT_SERVER_NAME, MQTT_SERVER_PORT);
 
 	if (MQTTclient.connect(token)) {
 		debugOUT(F("Established MQTT connection..."));
@@ -1275,7 +1275,7 @@ void SckESP::sendNTPpacket(IPAddress &address) {
   packetBuffer[14] = 49;
   packetBuffer[15] = 52;
 
-  Udp.beginPacket(address, 123);
+  Udp.beginPacket(address, NTP_SERVER_PORT);
   Udp.write(packetBuffer, 48);
   Udp.endPacket();
 };

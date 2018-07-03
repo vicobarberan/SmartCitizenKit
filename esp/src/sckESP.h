@@ -27,10 +27,12 @@
 #define MAX_SAVED_CREDENTIALS 8
 #define TOKEN_FILE "/token.txt"
 
-// Time server
-#define NTP_SERVER_NAME "pool.ntp.org"
+// Time servertrue
+#define NTP_SERVER_NAME "ntp.smartcitizen.me"
+#define NTP_SERVER_PORT 80
 #define HTTP_TIME_SERVER_NAME "data.smartcitizen.me"
 #define MQTT_SERVER_NAME "mqtt.smartcitizen.me"
+#define MQTT_SERVER_PORT 80
 
 
 class SckESP {
