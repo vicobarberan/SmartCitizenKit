@@ -432,7 +432,7 @@ void SckBase::changeMode(SCKmodes newMode) {
 			// led.dim = true;
 
 			// Restart Watchdog
-			// restartWatchdog();
+			restartWatchdog();
 
 			// If we dont have wifi turn off esp (it will be turned on by next publish try)
 			if (!onWifi) ESPcontrol(ESP_OFF);
@@ -925,10 +925,10 @@ void SckBase::processStatus() {
 				sckOut(F("MQTT publish OK!!"));
 
 				// Start dimming the led...
-				led.dim = true;
+				// led.dim = true;
 
 				// Published OK so restarting the watchdog.
-				// restartWatchdog();
+				restartWatchdog();
 
 				ESPcontrol(ESP_OFF);
 				ESPpublishPending = false;
@@ -1907,7 +1907,7 @@ bool SckBase::publishToSD(bool platformPublishedOK) {
 		sckOut(F("Readings saved to SD!!"));
 
 		// Start (or continue in case fo MODE_NET) dimming the led...
-		led.dim = true;
+		// led.dim = true;
 
 		return true;
 	} else {
@@ -1987,7 +1987,7 @@ void SckBase::buttonEvent() {
 	} else {
 
 		butIsDown = false;
-		if (mode == MODE_NET || mode == MODE_SD) led.dim = true;
+		// if (mode == MODE_NET || mode == MODE_SD) led.dim = true;
 		butLastEvent = millis();		
 		
 		timerClear(ACTION_LONG_PRESS);
@@ -2519,11 +2519,11 @@ void Led::tick() {
 		}
 
 		// TODO improve very low brightness levels
-		if (dim) {
-			if (brightnessFactor > 0.001) brightnessFactor = brightnessFactor - (1.0 / (2.0 * refreshPeriod));
-		} else {
-			brightnessFactor = 1;
-		}
+		// if (dim) {
+		// 	if (brightnessFactor > 0.001) brightnessFactor = brightnessFactor - (1.0 / (2.0 * refreshPeriod));
+		// } else {
+		// 	brightnessFactor = 1;
+		// }
 
 		ledRGBcolor.r = ledRGBcolor.r * brightnessFactor;
 		ledRGBcolor.g = ledRGBcolor.g * brightnessFactor;
@@ -2704,6 +2704,10 @@ bool SckBase::timerRun() {
 
 					} case ACTION_PUBLISH: {
 
+						//Turn off Serial leds
+						digitalWrite(SERIAL_TX_LED, HIGH);
+						digitalWrite(SERIAL_RX_LED, HIGH);
+
 						// If we are not waiting for previous publish triggger a new one
 						if (!timerExists(ACTION_READING_FINISHED)) publish();
 						break;
@@ -2713,13 +2717,13 @@ bool SckBase::timerRun() {
 						sdLogADC();
 						break;
 
-					} //case ACTION_WATCHDOG_RESET: {
+					} case ACTION_WATCHDOG_RESET: {
 
-					// 	sckOut(F("Watchdog reset triggered!!!"));
-					// 	// Only reset kit in Setup and net modes
-					// 	if (mode == MODE_NET || mode == MODE_AP) softReset();
-					// 	break;
-					// } 
+						sckOut(F("Watchdog reset triggered!!!"));
+						// Only reset kit in Setup and net modes
+						if (mode == MODE_NET || mode == MODE_AP) softReset();
+						break;
+					} 
 				}
 
 				// Clear Timer
@@ -2795,16 +2799,16 @@ bool SckBase::timerExists(TimerAction action) {
 	return false;
 }
 
-// void SckBase::restartWatchdog() {
+void SckBase::restartWatchdog() {
 
-// 	sckOut(String F("RE - Starting Watchdog"));
+	sckOut(String F("RE - Starting Watchdog"));
 
-// 	// Clear the previous set Watchdog
-// 	timerClear(ACTION_WATCHDOG_RESET);
+	// Clear the previous set Watchdog
+	timerClear(ACTION_WATCHDOG_RESET);
 
-// 	// Reset kit if nobody calls this function in 5 reading intervals
-// 	timerSet(ACTION_WATCHDOG_RESET, configuration.readInterval * 1000 * MAX_PUBLISH_FAILS_ALLOWED);
-// }
+	// Reset kit if nobody calls this function in 5 reading intervals
+	timerSet(ACTION_WATCHDOG_RESET, configuration.readInterval * 1000 * MAX_PUBLISH_FAILS_ALLOWED);
+}
 
 
 /* 	-------------
